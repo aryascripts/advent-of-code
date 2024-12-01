@@ -1,4 +1,4 @@
-require_relative 'array_sorter'
+require_relative 'utils/array_sorter'
 
 input_file_contents = File.read("1_input.txt")
 lines = input_file_contents.split("\n")
@@ -15,7 +15,6 @@ sorted_array_1 = ArraySorter.new(array_1).sort
 sorted_array_2 = ArraySorter.new(array_2).sort
 
 array_2_tally = sorted_array_2.tally
-p array_2_tally[80738]
 
 difference = []
 similarity_scores = []
