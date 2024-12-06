@@ -34,7 +34,7 @@ class Day6 < DayRunner
       break if outcome == "OUT_OF_BOUNDS"
 
       if outcome == "OBSTACLE"
-        @direction = NEXT_DIRECTIONS[@direction] if outcome == "OBSTACLE"
+        @direction = NEXT_DIRECTIONS[@direction]
       else
         @visited.add(@pos)
       end
