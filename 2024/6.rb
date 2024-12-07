@@ -10,26 +10,30 @@ class Day6 < DayRunner
     move_left: :move_up
   }.freeze
 
-  def run(sample = true)
-    @input = file_input(day: 6, sample: sample)
 
-    visited = Set.new
-    obstacles = Set.new
-    pos = nil
-    direction = :move_up
+  def initialize(sample = false)
+    @input = file_input(day: 6, sample: sample)
+    @obstacles = Set.new
+    @starting_pos = nil
 
     @max_x = @input[0].length - 1
     @max_y = @input.length - 1
 
     @input.each_with_index do |line, i|
       line.split("").each_with_index do |char, j|
-        obstacles.add([j, i]) if char == "#"
-        pos = [j, i] if char != "#" && char != "."
+        @obstacles.add([j, i]) if char == "#"
+        @starting_pos = [j, i] if char != "#" && char != "."
       end
     end
+  end
+
+  def run
+    pos = @starting_pos.dup
+    direction = :move_up
+    visited = Set.new
 
     loop do
-      outcome = self.send(direction, pos, obstacles)
+      outcome = self.send(direction, pos, @obstacles)
       break if outcome == "OUT_OF_BOUNDS"
 
       if outcome == "OBSTACLE"
@@ -43,40 +47,23 @@ class Day6 < DayRunner
     p "Part 1: #{visited.length}"
   end
 
-  def part_2(sample = true)
-    @input = file_input(day: 6, sample: sample)
-
-    obstacles = Set.new
-    pos = nil
-
-    @max_x = @input[0].length - 1
-    @max_y = @input.length - 1
-
-    @input.each_with_index do |line, i|
-      line.split("").each_with_index do |char, j|
-        obstacles.add([j, i]) if char == "#"
-        pos = [j, i] if char != "#" && char != "."
-      end
-    end
-
+  def part_2
+    pos = @starting_pos.dup
     valid_obstacle_positions = Set.new
 
     # runs to make (where to place obstacles)
     (0..@max_x).each do |x|
       (0..@max_y).each do |y|
-        # p "Running for #{x}, #{y}"
-        tracker = Set.new
         temp_obstacle = [x, y]
-        direction = :move_up
-
         next if temp_obstacle == pos
 
+        tracker = Set.new
+        direction = :move_up
         current_run_pos = pos.dup
 
         loop do
-          outcome = self.send(direction, current_run_pos, obstacles)
+          outcome = self.send(direction, current_run_pos, @obstacles)
           if outcome == "OUT_OF_BOUNDS"
-            # p "Breaking for out of bounds"
             break
           end
 
@@ -128,6 +115,6 @@ class Day6 < DayRunner
 end
 
 sample = false
-day6 = Day6.new
-day6.run(sample)
-day6.part_2(sample)
+day6 = Day6.new(sample)
+day6.run
+day6.part_2
